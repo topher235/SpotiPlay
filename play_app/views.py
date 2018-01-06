@@ -17,20 +17,51 @@ SPOTIFY_CLIENT_SECRET = 'a38bc6643c2847429cde433ea6770e24'
 # Create your views here.
 
 def index(request):
-	if 'user_token' in request.session:
-		print()
-		print("GOT TO THE USER TOKEN IN INDEX")
-		sp = spotipy.Spotify(auth=request.session['user_token'])
-		results = sp.current_user_saved_tracks()
-		for item in results['items']:
-			track = item['track']
-			print(track['name'] + ' - ' + track['artists'][0]['name'])
-
 	form = forms.SearchArtistForm()
 	context = {'form': form}
 
 	# go to results page
 	return render(request, 'play_app/index.html', context)
+
+
+def searchTracksFromArtist(artist, limit, offset, array):
+	client_credentials_manager = SpotifyClientCredentials(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
+	sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+	results = sp.search(q=artist, limit=limit, offset=offset)
+
+	#print(results['tracks']['items'])
+	for i in results['tracks']['items']:
+		array[i['name']] = i['id']
+	if(results['tracks']['total'] > limit*offset):
+		offset += 1
+		searchTracksFromArtist(artist, limit, offset, array)
+
+def getAllSongsFromArtist(artist):
+	array = {}
+	searchTracksFromArtist(artist, 50, 0, array)
+	return array
+
+def getQueryFromSetlistFM(headers, context):
+	
+	artist_search_url   = 'https://api.setlist.fm/rest/1.0/search/artists?artistName={}&p=1&sort=sortName'
+	artist_search_query = artist_search_url.format(context['artist'])
+	r = requests.get(artist_search_query, headers=headers)
+	return r.json()
+
+def getSetlists(headers, context):
+	mbid = context['query']['artist'][0]['mbid']
+	artist_setlist_url   = 'https://api.setlist.fm/rest/1.0/artist/{}/setlists?p=1'
+	artist_setlist_query = artist_setlist_url.format(mbid)
+	r = requests.get(artist_setlist_query, headers=headers)
+	return r.json()
+
+def getImageURL(context):
+	client_credentials_manager = SpotifyClientCredentials(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
+	sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+	results = sp.search(q='artist:' + context['artist'], limit=5, type='artist')
+	#This is the structure of the Spotify API object to get an image url
+	image_url = results['artists']['items'][0]['images'][0]['url']
+	return image_url
 
 ### Searches for an artist with Setlist.fm's api
 ### Grabs that artist's 'mbid'
@@ -43,58 +74,41 @@ def search_result_view(request):
 
 		if form.is_valid():
 			context['artist'] = form.cleaned_data['artist']
-
-
-#	SETLIST.FM -- search for artist
+	
+	#SETLIST.FM -- search for artist
 	headers = {
 		'Accept': 'application/json',
 		'x-api-key': SETLIST_FM_API_KEY
 	}
+	context['query'] = getQueryFromSetlistFM(headers, context)
 
-	artist_search_url   = 'https://api.setlist.fm/rest/1.0/search/artists?artistName={}&p=1&sort=sortName'
-	artist_search_query = artist_search_url.format(context['artist'])
-	r = requests.get(artist_search_query, headers=headers)
-	context['query'] = r.json()
-
-	artistList = []
-
+	#SETLIST.FM -- get artist's setlists
+	artist_list = []
 	#possible that the user enters in an artist that can't be found
 	#either due to typo or not existing
 	try:
-		for i in range(0, 20):
-			artistList.append(objects.Artist(context['query']['artist'][0], i))
+		for i in range(0, 10):
+			artist_list.append(objects.Artist(context['query']['artist'][0], i))
 	except KeyError:
 		return render(request, 'play_app/searchError.html', context)
 
-#	SETLIST.FM -- get artist's setlists
-	mbid = context['query']['artist'][0]['mbid']
-	artist_setlist_url   = 'https://api.setlist.fm/rest/1.0/artist/{}/setlists?p=1'
-	artist_setlist_query = artist_setlist_url.format(mbid)
-	r = requests.get(artist_setlist_query, headers=headers)
-	context['setlists'] = r.json()
-	print(context['query'])
+	context['setlists'] = getSetlists(headers, context)
 
 	i = 0
-	for artist in artistList:
+	for artist in artist_list:
 		artist.setlist = objects.Setlist(context['setlists']['setlist'][i])
 		i += 1
+	context['artist_list'] = artist_list
 
-	context['artistList'] = artistList
+	#SPOTIFY -- get image url for artist
+	context['image_url'] = getImageURL(context)
 
-#	scope = 'user-library-read'
-#	token = util.prompt_for_user_token
-
-	
-	client_credentials_manager = SpotifyClientCredentials(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
-	sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-
-	results = sp.search(q='artist:' + context['artist'], limit=5, type='artist')
-#	This is the structure of the Spotify API object to get an image url
-	image_url = results['artists']['items'][0]['images'][0]['url']
-	context['image_url'] = image_url
-
+	#Playlist form, maybe remove if JS/Ajax is used?
 	playlist_form = forms.MakePlaylistForm()
 	context['playlist_form'] = playlist_form
+
+	#Get all songs from the artist
+	context['all_songs'] = getAllSongsFromArtist(context['artist'])
 
 	return render(request, 'play_app/searchResult.html', context)
 
@@ -106,75 +120,21 @@ def feedback_view(request):
 	context = {}
 	return render(request, 'play_app/feedback.html', context)
 
+def login_view(request):
+	return render(request, 'play_app/login.html', {})
+
+def logout_view(request):
+	return render(request, 'play_app/logout.html', {})
+
+
+
+
 def page_view(request):
+	print(len(array))
+	for t in array.items():
+		print(t)
+
+
 	context = {}
 	return render(request, 'play_app/page.html', context)
 
-def login_view(request):
-#	scope = 'user-library-read playlist-modify-public playlist-modify-private'
-#	if len(sys.argv) > 1:
-#	    username = sys.argv[1]
-#	else:
-#		print("Usage: %s username" % (sys.argv[0],))
-#		sys.exit()
-#
-#	token =	util.prompt_for_user_token(username, scope, client_id=SPOTIFY_CLIENT_ID,
-#		client_secret=SPOTIFY_CLIENT_SECRET, redirect_uri='http://localhost:8000/play_app/')
-#	
-#
-#
-#
-#	cache_path = ".cache-" + username
-#	sp_oauth = oauth2.SpotifyOAuth(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET,
-#		'http://localhost:8000/play_app/', scope=scope)
-#	access_token = ""
-#	token_info = sp_oauth.get_cached_token()
-#
-#	if token_info:
-#		print("Found cached token")
-#		print(cache_path)
-#		access_token = token_info['access_token']
-#	else:
-#		url = request.url
-#		code = sp_oauth.parse_response_code(url)
-#		if code:
-#			print("Found auth code...")
-#			token_info = sp_oauth.get_access_token(code)
-#			access_token = token_info['access_token']
-#
-#	if access_token:
-#		print("Access token available...")
-#		request.session['user_token'] = access_token
-#		print("SUCCESS")
-#		print("---------------------------------------------------------------------")
-#		return index(request)
-#	else:
-#		print("----------------------------------------------------------------------")
-#		print("FAIL")
-#		return index(request)
-
-
-
-
-#	if token:
-#		request.session['user_token'] = token
-#		print("SUCCESS")
-#		print("---------------------------------------------------------------------")		
-#		return index(request)
-#	else:
-#		print("----------------------------------------------------------------------")
-#		print("FAIL")
-
-	return render(request, 'play_app/login.html', {})
-
-
-
-def logout_view(request):
-	try:
-		#del request.session['user_token']
-		logout(request)
-		#cache.delete('.cache-runserver')
-		print(cache.get('access_token'))
-		return render(request, 'play_app/logout.html', {})
-	except KeyError:
-		return render(request, 'play_app/logout.html', {})

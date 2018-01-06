@@ -11,9 +11,13 @@
 
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="{% static 'play_app/js/spotify-web-api.js' %}"></script>
 	<script>
 		$('document').ready(function() {
 			$('.inner').append("<p>" + window.localStorage.getItem("accessToken") + "</p>");
+
+			var spotifyApi = new SpotifyWebApi();
+			spotifyApi.setAccessToken(String(localStorage.getItem("accessToken")));
 		});
 	</script>
 </body>

@@ -8,14 +8,14 @@
 	{% block body_block %}
 		<div class="row">
 			<div class="col s6">
-				<h3 class="pin-header">{{artistList.0.name}}</h3>
+				<h3 id="artistName-js" class="pin-header">{{artist_list.0.name}}</h3>
 				<img src="{{ image_url }}" class="responsive-img pin-img col s5"/>
 			</div>
 			<div class="col s6">
 				 <ul class="collapsible popout">
-					{% for artist in artistList %}
+					{% for artist in artist_list %}
 						<li>
-							<div class="card-panel collapsible-header {% cycle 'green' 'green darken-2' %}">
+							<div id="result-js" class="card-panel collapsible-header {% cycle 'green' 'green darken-2' %}">
 								<h5 class="white-text">
 									{{artist.setlist.venue_name}} <br>
 									{{artist.setlist.venue_city}}, {{artist.setlist.venue_state}} <br>
@@ -30,11 +30,19 @@
 										<h6> Songs </h6>
 										<ol>
 											{% for song in artist.setlist.set_list %}
-												<li>{{ song.name }}</li>
+												{% if not song.name in all_songs %}
+													<li class="songName-js red-text">{{ song.name }}</li>
+												{% else %}
+													<li class="songName-js">{{ song.name }}</li>
+												{% endif %}
 											{% endfor %}
 
 											{% for song in artist.setlist.encore_list %}
-												<li>{{ song.name }}</li>
+												{% if not song.name in all_songs %}
+													<li class="songName-js red-text">{{ song.name }}</li>
+												{% else %}
+													<li class="songName-js">{{ song.name }}</li>
+												{% endif %}
 											{% endfor %}
 										</ol>
 									</div>
@@ -63,6 +71,10 @@
 	{% endblock %}
 
 	{% block scripts %}
+	<!--
+		<script src="{% static 'play_app/js/spotify-web-api.js' %}"></script>
+		<script src="{% static 'play_app/js/master.js' %}"></script>
+	-->	
 		<script>
 			$(document).ready(function() {
 				$('.collapsible').collapsible();
