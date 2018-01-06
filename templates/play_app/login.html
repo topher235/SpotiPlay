@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<h1>Login</h1>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script>
+		function parseHash(data) {
+			return data.split("access_token=")[1].split("&")[0];
+		}
+
+		$('document').ready(function() {
+			var spotifyAccessToken = parseHash(String(window.location.hash));
+			console.log(spotifyAccessToken);
+			localStorage.clear();
+			localStorage.setItem('accessToken', spotifyAccessToken);
+			window.close();
+		});
+	</script>
+</body>
+</html>

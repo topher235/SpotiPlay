@@ -1,0 +1,11 @@
+{
+  "name": "play",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "browserify static/play_app/js/master.js -o static/play_app/js/bundle.js"
+  },
+  "dependencies": {
+    "browserify": "^14.5.0",
+    "spotify-web-api-js": "^0.23.0"
+  }
+}

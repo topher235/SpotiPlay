@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+{% extends 'play_app/base.html' %}
+{% load staticfiles %}
+	{% block title %}
+		Search Results
+	{% endblock %}
+
+	{% block body_block %}
+		<div class="row">
+			<div class="col s6">
+				<h3 class="pin-header">{{artistList.0.name}}</h3>
+				<img src="{{ image_url }}" class="responsive-img pin-img col s5"/>
+			</div>
+			<div class="col s6">
+				 <ul class="collapsible popout">
+					{% for artist in artistList %}
+						<li>
+							<div class="card-panel collapsible-header {% cycle 'green' 'green darken-2' %}">
+								<h5 class="white-text">
+									{{artist.setlist.venue_name}} <br>
+									{{artist.setlist.venue_city}}, {{artist.setlist.venue_state}} <br>
+									{{artist.setlist.date}}
+								</h5>
+								
+							</div>
+
+							<div class="collapsible-body">
+								<div class="row">
+									<div class="col">
+										<h6> Songs </h6>
+										<ol>
+											{% for song in artist.setlist.set_list %}
+												<li>{{ song.name }}</li>
+											{% endfor %}
+
+											{% for song in artist.setlist.encore_list %}
+												<li>{{ song.name }}</li>
+											{% endfor %}
+										</ol>
+									</div>
+									<div class="col">
+										<form action="{% url 'play_app:search_result' %}" method="POST">
+											{% csrf_token %}
+											{{ playlist_form.as_p }}
+										</form>
+										<div class="switch">
+											<label>
+												Private
+												<input type="checkbox">
+												<span class="lever"></span>
+												Public
+											</label>
+										</div> <br>
+										<button class="waves-effect waves-light btn" type="submit"><i class="material-icons right">get_app</i>Make Playlist</button>
+									</div>
+								</div>
+							</div>
+						</li>
+					{% endfor %}
+				</ul> <!-- end accordion -->
+			</div> <!-- end col -->
+		</div> <!-- end row -->
+	{% endblock %}
+
+	{% block scripts %}
+		<script>
+			$(document).ready(function() {
+				$('.collapsible').collapsible();
+				$('.pin-header').pushpin({
+					offset: 50
+				});
+				$('.pin-img').pushpin({
+					offset: 150
+				})
+			});
+		</script>
+	{% endblock %}
