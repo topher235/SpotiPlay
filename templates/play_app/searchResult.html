@@ -28,9 +28,9 @@
 								<div class="row">
 									<div class="col">
 										<h6> Songs </h6>
-										<ol>
+										<ol id="songsList-js">
 											{% for song in artist.setlist.set_list %}
-												{% if not song.name in all_songs %}
+												{% if not song.name|lower in all_songs %}
 													<li class="songName-js red-text">{{ song.name }}</li>
 												{% else %}
 													<li class="songName-js">{{ song.name }}</li>
@@ -38,7 +38,7 @@
 											{% endfor %}
 
 											{% for song in artist.setlist.encore_list %}
-												{% if not song.name in all_songs %}
+												{% if not song.name|lower in all_songs %}
 													<li class="songName-js red-text">{{ song.name }}</li>
 												{% else %}
 													<li class="songName-js">{{ song.name }}</li>
@@ -47,19 +47,19 @@
 										</ol>
 									</div>
 									<div class="col">
-										<form action="{% url 'play_app:search_result' %}" method="POST">
+										<form action="#" method="POST">
 											{% csrf_token %}
 											{{ playlist_form.as_p }}
 										</form>
 										<div class="switch">
 											<label>
 												Private
-												<input type="checkbox">
+												<input id="visibility-js" type="checkbox">
 												<span class="lever"></span>
 												Public
 											</label>
 										</div> <br>
-										<button class="waves-effect waves-light btn" type="submit"><i class="material-icons right">get_app</i>Make Playlist</button>
+										<button id="playlistBtn-js" class="waves-effect waves-light btn" type="submit"><i class="material-icons right">get_app</i>Make Playlist</button>
 									</div>
 								</div>
 							</div>
@@ -85,5 +85,9 @@
 					offset: 150
 				})
 			});
+			var songs = '{{all_songs_json}}';
+			var all_songs = JSON.stringify(songs)
+			all_songs = jQuery.parseJSON(songs.replace(/&quot;/g,'"').replace(/&#39;/g,"'"));
 		</script>
+		<script src="{% static 'play_app/js/master.js' %}"></script>
 	{% endblock %}

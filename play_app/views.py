@@ -9,6 +9,7 @@ import spotipy.util as util
 import spotipy.oauth2 as oauth2
 from spotipy.oauth2 import SpotifyClientCredentials
 import requests
+import json
 
 SETLIST_FM_API_KEY = 'b0bf96c4-6af5-4ac0-ae87-1b3d8e6cd9cb'
 SPOTIFY_CLIENT_ID = 'bb7dcf3b9cf841939c48ef54843ef28a'
@@ -25,30 +26,50 @@ def index(request):
 
 
 def searchTracksFromArtist(artist, limit, offset, array):
+	'''
+		Requests all songs from an artist and adds them to a dictionary
+		Calls itself if not all songs have been visited
+	'''
 	client_credentials_manager = SpotifyClientCredentials(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
 	sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 	results = sp.search(q=artist, limit=limit, offset=offset)
 
-	#print(results['tracks']['items'])
 	for i in results['tracks']['items']:
-		array[i['name']] = i['id']
+		print(i['name'])
+	print()
+	for i in results['tracks']['items']:
+		array[i['name'].lower()] = i['id']
 	if(results['tracks']['total'] > limit*offset):
-		offset += 1
+		offset += 50
 		searchTracksFromArtist(artist, limit, offset, array)
 
 def getAllSongsFromArtist(artist):
+	'''
+		Gets all songs from an artist using Spotiy's API
+		returns a dictionary of those songs (key) with an ID (value)
+		Works because Python is pass-by-object-reference
+	'''
 	array = {}
 	searchTracksFromArtist(artist, 50, 0, array)
+	for t in array.items():
+		print(t)
 	return array
 
 def getQueryFromSetlistFM(headers, context):
-	
+	'''
+		Requests artist information from Setlist.FM
+		Returns a json object for the artist
+	'''
 	artist_search_url   = 'https://api.setlist.fm/rest/1.0/search/artists?artistName={}&p=1&sort=sortName'
 	artist_search_query = artist_search_url.format(context['artist'])
 	r = requests.get(artist_search_query, headers=headers)
 	return r.json()
 
 def getSetlists(headers, context):
+	'''
+		Requests setlists for an artist from Setlist.FM
+		Returns a json object for the setlists
+	'''
 	mbid = context['query']['artist'][0]['mbid']
 	artist_setlist_url   = 'https://api.setlist.fm/rest/1.0/artist/{}/setlists?p=1'
 	artist_setlist_query = artist_setlist_url.format(mbid)
@@ -56,6 +77,10 @@ def getSetlists(headers, context):
 	return r.json()
 
 def getImageURL(context):
+	'''
+		Requests the image url from the Spotify API
+		Returns that url
+	'''
 	client_credentials_manager = SpotifyClientCredentials(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
 	sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 	results = sp.search(q='artist:' + context['artist'], limit=5, type='artist')
@@ -87,7 +112,7 @@ def search_result_view(request):
 	#possible that the user enters in an artist that can't be found
 	#either due to typo or not existing
 	try:
-		for i in range(0, 10):
+		for i in range(0, 20):
 			artist_list.append(objects.Artist(context['query']['artist'][0], i))
 	except KeyError:
 		return render(request, 'play_app/searchError.html', context)
@@ -109,6 +134,7 @@ def search_result_view(request):
 
 	#Get all songs from the artist
 	context['all_songs'] = getAllSongsFromArtist(context['artist'])
+	context['all_songs_json'] = json.dumps(context['all_songs'])
 
 	return render(request, 'play_app/searchResult.html', context)
 
@@ -130,6 +156,7 @@ def logout_view(request):
 
 
 def page_view(request):
+	array = getAllSongsFromArtist('touche amore')
 	print(len(array))
 	for t in array.items():
 		print(t)
