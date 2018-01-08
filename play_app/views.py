@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.core.cache import cache
 from . import forms
 from . import objects
-import sys
 import spotipy
 import spotipy.util as util
 import spotipy.oauth2 as oauth2
@@ -15,13 +14,13 @@ SETLIST_FM_API_KEY = 'b0bf96c4-6af5-4ac0-ae87-1b3d8e6cd9cb'
 SPOTIFY_CLIENT_ID = 'bb7dcf3b9cf841939c48ef54843ef28a'
 SPOTIFY_CLIENT_SECRET = 'a38bc6643c2847429cde433ea6770e24'
 
-# Create your views here.
 
 def index(request):
+	'''
+		Inserts a form into the index page
+	'''
 	form = forms.SearchArtistForm()
 	context = {'form': form}
-
-	# go to results page
 	return render(request, 'play_app/index.html', context)
 
 
@@ -34,9 +33,6 @@ def searchTracksFromArtist(artist, limit, offset, array):
 	sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 	results = sp.search(q=artist, limit=limit, offset=offset)
 
-	for i in results['tracks']['items']:
-		print(i['name'])
-	print()
 	for i in results['tracks']['items']:
 		array[i['name'].lower()] = i['id']
 	if(results['tracks']['total'] > limit*offset):
@@ -93,6 +89,16 @@ def getImageURL(context):
 ### Searches for an artist's recent setlists with Setlist.fm's api
 ### Store ~20 (1 page in the api) results in context
 def search_result_view(request):
+	'''
+		Searches for an artist with Setlist.fm's api
+		Creates artist & setlist objects that will later
+		be displayed on the screen.
+		Gets the image of the artist/band.
+		Gets all of the songs from an artist/band available
+		on Spotify so that the ones not available can be
+		specified on the screen.
+
+	'''
 	context = {}
 	if request.method == 'POST':
 		form = forms.SearchArtistForm(request.POST)
@@ -139,23 +145,33 @@ def search_result_view(request):
 	return render(request, 'play_app/searchResult.html', context)
 
 def about_view(request):
+	'''
+		Displays the about page for SpotiPlay.
+	'''
 	context = {}
 	return render(request, 'play_app/about.html', context)
 
 def feedback_view(request):
+	'''
+		Displays the feedback page for SpotiPlay.
+	'''
 	context = {}
 	return render(request, 'play_app/feedback.html', context)
 
-def login_view(request):
-	return render(request, 'play_app/login.html', {})
-
 def logout_view(request):
+	'''
+		Page for logging out of Spotify.
+	'''
 	return render(request, 'play_app/logout.html', {})
 
 
 
 
 def page_view(request):
+	'''
+		Page for testing functions...
+		Remove later.
+	'''
 	array = getAllSongsFromArtist('touche amore')
 	print(len(array))
 	for t in array.items():
