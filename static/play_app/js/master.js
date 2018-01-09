@@ -1,14 +1,17 @@
 var access_token = String(localStorage.getItem("accessToken"));
 var playlist_array = [];
 
-$('#playlistBtn-js').on('click', function() {
+//$('document').ready(function() {
+//	$('#playlistBtn-js').onclick = makePlaylist;
+//})
+
+$('body').on('click', '#playlistBtn-js', function() {
 	//check if has a title
 	//get private or public value
 	//get song titles
 	//send array of id's to django with ajax
 	//receive a success or fail
 	validatePlaylistTitle();
-	
 	var visibility = $('#visibility-js').is(':checked');
 	if(visibility) {
 		//makePublicPlaylist($(this));
@@ -27,9 +30,13 @@ $('#playlistBtn-js').on('click', function() {
 	playlist_array = [];
 });
 
+//function makePlaylist() {
+//	
+//}
+
 //WORKS
 function validatePlaylistTitle() {
-	var playlist_title = $('#playlistTitle-js').val().trim();
+	var playlist_title = $("label + #playlistTitle-js").val();
 	if(playlist_title == "") {
 		alert("Please enter a title for your playlist.");
 	}
