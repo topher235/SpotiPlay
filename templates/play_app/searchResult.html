@@ -5,6 +5,10 @@
 		Search Results
 	{% endblock %}
 
+	{% block stylesheets %}
+		<link rel="stylesheet" href="{% static 'play_app/css/searchResult.css' %}">
+	{% endblock %}
+
 	{% block body_block %}
 		<div class="row">
 
@@ -34,11 +38,11 @@
 			</div>
 
 			<!-- Setlists -->
-			<div class="col s5 push-s6">
+			<div class="col s5 push-s7">
 				 <ul class="collapsible popout">
 					{% for artist in artist_list %}
 						<li>
-							<div id="result-js" class="card-panel collapsible-header {% cycle 'green' 'green darken-2' %}">
+							<div id="result-js" class="setlists-card-js card-panel collapsible-header {% cycle 'teal' 'teal darken-4' %}">
 								<h5 class="white-text">
 									{{artist.setlist.venue_name}} <br>
 									{{artist.setlist.venue_city}}, {{artist.setlist.venue_state}} <br>
@@ -47,26 +51,30 @@
 								
 							</div>
 
-							<div class="collapsible-body">
+							<div class="collapsible-body white">
 								<div class="row">
 									<div class="col">
 										<h6> Songs </h6>
 										<ol id="songsList-js">
-											{% for song in artist.setlist.set_list %}
-												{% if not song.name|lower in all_songs %}
-													<li class="songName-js red-text">{{ song.name }}</li>
-												{% else %}
-													<li class="songName-js">{{ song.name }}</li>
-												{% endif %}
-											{% endfor %}
+											{% if artist.setlist.set_list|length == 0 %}
+												<p> There are no songs available for this venue. </p>
+											{% else %}
+												{% for song in artist.setlist.set_list %}
+													{% if not song.name|lower in all_songs %}
+														<li class="songName-js red-text">{{ song.name }}</li>
+													{% else %}
+														<li class="songName-js">{{ song.name }}</li>
+													{% endif %}
+												{% endfor %}
 
-											{% for song in artist.setlist.encore_list %}
-												{% if not song.name|lower in all_songs %}
-													<li class="songName-js red-text">{{ song.name }}</li>
-												{% else %}
-													<li class="songName-js">{{ song.name }}</li>
-												{% endif %}
-											{% endfor %}
+												{% for song in artist.setlist.encore_list %}
+													{% if not song.name|lower in all_songs %}
+														<li class="songName-js red-text">{{ song.name }}</li>
+													{% else %}
+														<li class="songName-js">{{ song.name }}</li>
+													{% endif %}
+												{% endfor %}
+											{% endif %}					
 										</ol>
 									</div>
 									

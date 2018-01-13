@@ -1,0 +1,6 @@
+body {
+	/* vine */
+	background: #00bf8f;
+	background: -webkit-linear-gradient(to right, #00bf8f, #001510);
+	background: linear-gradient(to right, #00bf8f, #001510);
+}

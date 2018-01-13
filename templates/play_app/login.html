@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% extends "play_app/base.html" %}
+
+{% block body_block %}
+	<h3 class="black">Success</h3>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		function parseHash(data) {
+			return data.split("access_token=")[1].split("&")[0];
+		}
+		
+		$('document').ready(function() {
+			var spotifyAccessToken = parseHash(String(window.location.hash));
+			console.log(spotifyAccessToken);
+			localStorage.clear();
+			localStorage.setItem('accessToken', spotifyAccessToken);
+			window.close();
+		});
+	</script>
+{% endblock %}

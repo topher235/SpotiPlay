@@ -1,6 +1,7 @@
 from django.contrib.auth import logout
 from django.shortcuts import render
 from django.core.cache import cache
+from django.http import JsonResponse
 from . import forms
 from . import objects
 import spotipy
@@ -158,12 +159,35 @@ def feedback_view(request):
 	context = {}
 	return render(request, 'play_app/feedback.html', context)
 
+def login_view(request):
+	'''
+		Page for logging into Spotify.
+	'''
+	return render(request, 'play_app/login.html', {})
+
 def logout_view(request):
 	'''
 		Page for logging out of Spotify.
 	'''
 	return render(request, 'play_app/logout.html', {})
 
+def create_playlist_ajax(request):
+	data = {}
+	if request.method == 'GET':
+		print(request.GET)
+		data['title'] = request.GET['title']
+		data['songs'] = request.GET['songs[]']
+		data['visibility'] = request.GET['visibility']
+		data['access_token'] = request.GET['access_token']
+		data['user_id'] = request.GET['user_id']
+		#get all_songs
+
+	sp = spotipy.Spotify(auth=data['access_token'])
+	sp.trace = False
+	#retrieve all of the id's for the songs in this new playlist
+	playlists = sp.user_playlist_create(data['user_id'], data['title'], "Description");
+	print(playlists);
+	return JsonResponse(data)
 
 
 

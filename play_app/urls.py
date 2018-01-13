@@ -9,5 +9,7 @@ urlpatterns = [
 	url(r'^about/', views.about_view, name='about'),
 	url(r'^feedback/', views.feedback_view, name='feedback'),
 	url(r'^page/', views.page_view, name='page'),
+	url(r'^login/', views.login_view, name='login'),
 	url(r'^logout/', views.logout_view, name='logout'),
+	url(r'^create_playlist_ajax/$', views.create_playlist_ajax, name='create_playlist_ajax'),
 ]

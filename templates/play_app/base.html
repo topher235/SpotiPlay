@@ -18,31 +18,30 @@
 
 <body>
 
-	<nav class="green darken-2 pin-nav">
+	<nav class="teal accent-4 pin-nav">
 		<div class="nav-wrapper">
 			<a href="#!" class="brand-logo">BRAND</a>
 			<a href="#" data-target="side-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 			<ul id="nav-mobile" class="right hide-on-med-and-down">
 				<li class="{% block home_class %}{% endblock %}"><a href="{% url 'play_app:index' %}"><i class="material-icons left">home</i>Home</a></li>
 				<li class="{% block info_class %}{% endblock %}"><a href="{% url 'play_app:about' %}"><i class="material-icons left">info</i>About</a></li>
-				<li><a href="#" onclick="loginSpotify()"><i class="material-icons left">account_box</i>Login</a></li>
+				<li><a href="" onclick="loginSpotify()"><i class="material-icons left">account_box</i>Login</a></li>
 				<li class="{% block feedback_class %}{% endblock %}"><a href="{% url 'play_app:feedback' %}"><i class="material-icons left">feedback</i>Feedback</a></li>
 			</ul>
 			<ul class="sidenav" id="side-nav">
-				<li class="green">Menu</li>
+				<li class="grey">Menu</li>
 				<li><a href="#"><i class="material-icons left">home</i>Home</a></li>
 				<li><a href="#"><i class="material-icons left">info</i>About</a></li>
 				<li><a href="#"><i class="material-icons left">account_box</i>Login</a></li>
 				<li><a href="#"><i class="material-icons left">feedback</i>Feedback</a></li>
-				
 			</ul>
 		</div>
 	</nav>
 
 		{% block body_block %}
 		{% endblock %}
-
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	
+	<script src="{% static 'play_app/jquery-3.2.1.js' %}"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
 	<script type="text/javascript">

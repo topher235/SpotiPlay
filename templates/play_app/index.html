@@ -6,7 +6,7 @@
 	{% endblock %}
 
 	{% block stylesheets %}
-		<link rel="stylesheet" href="{% static 'play_app/css/index.css' %}" />
+		<link rel="stylesheet" href="{% static 'play_app/css/index.css' %}">
 	{% endblock %}
 
 	{% block home_class %}
@@ -14,12 +14,12 @@
 	{% endblock %}
 
 	{% block body_block %}
-		<div class="container">
-			<form action="{% url 'play_app:search_result' %}" method="POST" style="margin-top: 250px;">
+		<div class="form-container">
+			<form action="{% url 'play_app:search_result' %}" method="POST">
 				{% csrf_token %}
-				{{ form.as_p }}
-				<button class="waves-effect waves-light btn" type="submit"><i class="material-icons right">search</i>Search</button>
+				{{ form.artist }}
+				<button class="teal accent-4 waves-effect waves-light btn" type="submit" <i class="material-icons right">search</i>Search</button>
 			</form>
 		</div>
-		<a class="btn" href="{% url 'play_app:logout' %}">Logout</a>
+		<!--<a class="btn" href="{% url 'play_app:logout' %}">Logout</a>-->
 	{% endblock %}
