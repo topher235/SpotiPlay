@@ -52,14 +52,15 @@ function makePublicPlaylist() {
 		dataType: 'json',
 		data: {
 			'title': playlist_title,
-			'songs': playlist_array,
-			'all_songs': all_songs,
+			'songs': JSON.stringify(playlist_array),
+			'all_songs': JSON.stringify(all_songs),
 			'visibility': playlist_visibility,
 			'access_token': access_token,
 			'user_id': user_id
 		},
 		success: function(data) {
 			M.toast({html: 'Your playlist: ' + data.title + ' has been created'});
+			playlist_array = [];
 		},
 		fail: function(data) {
 			M.toast({html: 'An error occurred.'});
