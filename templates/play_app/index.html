@@ -14,12 +14,50 @@
 	{% endblock %}
 
 	{% block body_block %}
-		<div class="form-container">
-			<form action="{% url 'play_app:search_result' %}" method="POST">
-				{% csrf_token %}
-				{{ form.artist }}
-				<button class="teal accent-4 waves-effect waves-light btn" type="submit" <i class="material-icons right">search</i>Search</button>
-			</form>
+		<div class="row"></div>
+		<div class="row">
+			<div class="col s12 m8 l6">
+				<div class="card">
+					<div class="card-content">
+						<form action="{% url 'play_app:search_result' %}" method="POST">
+							{% csrf_token %}
+							{{ form.artist }}
+							<button class="teal accent-4 waves-effect waves-light btn" type="submit"> <i class="material-icons right">search</i>Search</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="col s12 m6 l4 offset-l1">
+				<div class="card">
+					<div class="card-content">
+						<span class="card-title">About</span> <hr>
+						<p>This is the about card.</p>
+					</div>
+				</div>
+			</div>
+
 		</div>
+		<div class="row">
+			<div class="col s12 m6 l4 offset-l7">
+				<div class="card">
+					<div class="card-content">
+						<span class="card-title">Feedback</span> <hr>
+						<p>This is the feedback card.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="page-footer">
+			<div class="container">
+				<div class="row">
+					<div class="col l6 s12">
+						<h5 class="white-text">Footer content</h5>
+						<p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+              		</div>
+              	</div>
+            </div>
+        </div>
 		<!--<a class="btn" href="{% url 'play_app:logout' %}">Logout</a>-->
 	{% endblock %}

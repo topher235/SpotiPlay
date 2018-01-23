@@ -1,13 +1,14 @@
+# Django imports
 from django.contrib.auth import logout
 from django.shortcuts import render
-from django.core.cache import cache
 from django.http import JsonResponse
+# This project imports
 from . import forms
 from . import objects
+# Spotipy imports
 import spotipy
-import spotipy.util as util
-import spotipy.oauth2 as oauth2
 from spotipy.oauth2 import SpotifyClientCredentials
+# Misc. imports
 import requests
 import json
 
@@ -122,13 +123,18 @@ def search_result_view(request):
 		for i in range(0, 20):
 			artist_list.append(objects.Artist(context['query']['artist'][0], i))
 	except KeyError:
+		context['error_message'] = "Cannot find " + context['artist']
 		return render(request, 'play_app/searchError.html', context)
 
 	context['setlists'] = getSetlists(headers, context)
 
 	i = 0
 	for artist in artist_list:
-		artist.setlist = objects.Setlist(context['setlists']['setlist'][i])
+		try:
+			artist.setlist = objects.Setlist(context['setlists']['setlist'][i])
+		except KeyError:
+			context['error_message'] = "This artist does not have a setlist."
+			return render(request, 'play_app/searchError.html', context)
 		i += 1
 	context['artist_list'] = artist_list
 
