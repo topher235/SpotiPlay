@@ -5,71 +5,40 @@
 <head>
 	<meta charset="UTF-8">
 	<title>{% block title %}{% endblock %}</title>
+
 	<link rel="stylesheet" href="{% static 'play_app\css\base.css' %}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<style>
-		nav {
-			z-index: 5;
-		}
-	</style>
 	{% block stylesheets %}{% endblock %}
+
+	<link rel="icon" href="{% static 'play_app/images/site_icon.png' %}">
 </head>
 
 <body>
 
 	<nav class="teal accent-4 pin-nav">
 		<div class="nav-wrapper">
-			<a href="#!" class="brand-logo">BRAND</a>
+			<a href="{% url 'play_app:index' %}" class="brand-logo">𝓢𝓹𝓸𝓽𝓲𝓟𝓵𝓪𝔂</a>
 			<a href="#" data-target="side-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-			<ul id="nav-mobile" class="right hide-on-med-and-down">
-				<li class="{% block home_class %}{% endblock %}"><a href="{% url 'play_app:index' %}"><i class="material-icons left">home</i>Home</a></li>
-				<li class="{% block info_class %}{% endblock %}"><a href="{% url 'play_app:about' %}"><i class="material-icons left">info</i>About</a></li>
-				<li><a href="" onclick="loginSpotify()"><i class="material-icons left">account_box</i>Login</a></li>
-				<li class="{% block feedback_class %}{% endblock %}"><a href="{% url 'play_app:feedback' %}"><i class="material-icons left">feedback</i>Feedback</a></li>
+			<ul class="right hide-on-med-and-down">
+				<li class="home-li-js"><a href="{% url 'play_app:index' %}"><i class="material-icons left">home</i>Home</a></li>
+				<li><a id="loginBtn-js" href="" onclick="loginSpotify()"><i class="material-icons left">account_box</i>Login</a></li>
 			</ul>
+			<!--
 			<ul class="sidenav" id="side-nav">
 				<li class="grey">Menu</li>
-				<li><a href="#"><i class="material-icons left">home</i>Home</a></li>
-				<li><a href="#"><i class="material-icons left">info</i>About</a></li>
-				<li><a href="#"><i class="material-icons left">account_box</i>Login</a></li>
-				<li><a href="#"><i class="material-icons left">feedback</i>Feedback</a></li>
+				<li class="home-li-js"><a href="{% url 'play_app:index' %}"><i class="material-icons left">home</i>Home</a></li>
+				<li><a id="loginBtn-js" href="" onclick="loginSpotify()"><i class="material-icons left">account_box</i>Login</a></li>
 			</ul>
+		-->
 		</div>
 	</nav>
 
-		{% block body_block %}
-		{% endblock %}
+	{% block body_block %}{% endblock %}
 	
 	<script src="{% static 'play_app/jquery-3.2.1.js' %}"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('.sidenav').sidenav();
-			$('.pin-nav').pushpin({
-				top: 1
-			});
-		});
-	</script>
-
-	<script>
-		function loginSpotify() {
-	        var SPOTIPY_CLIENT_ID = "bb7dcf3b9cf841939c48ef54843ef28a"
-	        var SPOTIPY_REDIRECT_URI = "http://localhost:8000/play_app/login/"
-	        var spotifyScope = "user-library-read playlist-modify-public playlist-modify-private"
-	        var spotifyAuthEndpoint = "https://accounts.spotify.com/authorize?"+"client_id="+SPOTIPY_CLIENT_ID+"&redirect_uri="+SPOTIPY_REDIRECT_URI+"&scope="+spotifyScope+"&response_type=token&state=123";
-	        window.open(spotifyAuthEndpoint,'callBackWindow','height=500,width=400');
-	        //This event listener will trigger once your callback page adds the token to localStorage
-	        window.addEventListener("storage",function(event){
-	            if (event.key == "accessToken"){
-	                var spAccessToken = event.newValue;
-	                //do things with spotify API using your access token here!!
-	            }
-	        });
-   		}	
-	</script>
-
+	<script src="{% static 'play_app/js/base.js' %}"></script>
 	{% block scripts %}{% endblock %}
 </body>
 

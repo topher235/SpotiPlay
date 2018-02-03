@@ -26,7 +26,7 @@ $('body').on('click', '#playlistBtn-js', function() {
 	//get private or public value
 	//send array of id's to django with ajax
 	//receive a success or fail
-	if(access_token == "") {
+	if(access_token == "" || access_token == null) {
 		M.toast({html: 'Please login with your Spotify account.'});
 		return;
 	}
@@ -45,7 +45,7 @@ $('body').on('click', '#playlistBtn-js', function() {
 
 
 function makePublicPlaylist() {
-	console.log(all_songs);
+	console.log("Making a public playlist");
 	$.ajax({
 		type: 'GET',
 		url: '/play_app/create_playlist_ajax/',
@@ -59,20 +59,37 @@ function makePublicPlaylist() {
 			'user_id': user_id
 		},
 		success: function(data) {
-			M.toast({html: 'Your playlist: ' + data.title + ' has been created'});
+			M.toast({html: 'Your public playlist: ' + data.title + ' has been created'});
 			playlist_array = [];
 		},
 		fail: function(data) {
-			M.toast({html: 'An error occurred.'});
+			M.toast({html: 'An error occurred while making your playlist.'});
 		}
 	});
 }
 
 function makePrivatePlaylist() {
 	console.log("Making a private playlist");
-	$.get('/play_app/create_playlist_ajax', {}, function(data) {
-		M.toast({html: 'Your playlist: ' + data + ' has been created'});
-	});
+	$.ajax({
+		type: 'GET',
+		url: '/play_app/create_playlist_ajax/',
+		dataType: 'json',
+		data: {
+			'title': playlist_title,
+			'songs': JSON.stringify(playlist_array),
+			'all_songs': JSON.stringify(all_songs),
+			'visibility': playlist_visibility,
+			'access_token': access_token,
+			'user_id': user_id
+		},
+		success: function(data) {
+			M.toast({html: 'Your private playlist: ' + data.title + ' has been created.'});
+			playlist_array = [];
+		},
+		fail: function(data) {
+			M.toast({html: 'An error occurred while making your playlist.'});
+		}
+	})
 }
 
 /*** WORKS ***/
@@ -81,6 +98,7 @@ function makePrivatePlaylist() {
 //to the global variable playlist_array.
 //The contents of that array will be sent to the back-end.
 $('body').on('click', '.setlists-card-js', function() {
+	playlist_array = [];
 	songs = $(this).siblings().find('#songsList-js')[0].children;
 	$.each(songs, function() {
 		console.log($(this).text());

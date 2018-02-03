@@ -107,6 +107,8 @@ def search_result_view(request):
 
 		if form.is_valid():
 			context['artist'] = form.cleaned_data['artist']
+	else:
+		return index(request)
 	
 	#SETLIST.FM -- search for artist
 	headers = {
