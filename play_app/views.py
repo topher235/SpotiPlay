@@ -49,8 +49,6 @@ def getAllSongsFromArtist(artist):
 	'''
 	array = {}
 	searchTracksFromArtist(artist, 50, 0, array)
-	for t in array.items():
-		print(t)
 	return array
 
 def getQueryFromSetlistFM(headers, context):
@@ -101,6 +99,7 @@ def search_result_view(request):
 		specified on the screen.
 
 	'''
+	print("SEARCH RESULT")
 	context = {}
 	if request.method == 'POST':
 		form = forms.SearchArtistForm(request.POST)
@@ -153,31 +152,12 @@ def search_result_view(request):
 
 	return render(request, 'play_app/searchResult.html', context)
 
-def about_view(request):
-	'''
-		Displays the about page for SpotiPlay.
-	'''
-	context = {}
-	return render(request, 'play_app/about.html', context)
-
-def feedback_view(request):
-	'''
-		Displays the feedback page for SpotiPlay.
-	'''
-	context = {}
-	return render(request, 'play_app/feedback.html', context)
-
 def login_view(request):
 	'''
 		Page for logging into Spotify.
 	'''
+	print("LOGGING IN")
 	return render(request, 'play_app/login.html', {})
-
-def logout_view(request):
-	'''
-		Page for logging out of Spotify.
-	'''
-	return render(request, 'play_app/logout.html', {})
 
 def create_playlist_ajax(request):
 	'''
@@ -186,9 +166,9 @@ def create_playlist_ajax(request):
 		using the given details. Sends back the data
 		dictionary.
 	'''
+	print("CREATING PLAYLIST")
 	data = {}
 	if request.method == 'GET':
-		print(request.GET)
 		data['title'] = request.GET['title']
 		data['songs'] = json.loads(request.GET['songs'])
 		data['visibility'] = request.GET['visibility']
@@ -204,34 +184,12 @@ def create_playlist_ajax(request):
 	# Create a new playlist for the given user, title, and visibility
 	playlists = sp.user_playlist_create(data['user_id'], data['title'], data['visibility']);
 	data['playlist_id'] = playlists['id']
-	print(playlists);
 
 	# Retrieve all of the id's for the songs in this new playlist
-	print()
-	print(data['songs'])
-	print()
 	for song in data['songs']:
-		print(song)
 		data['song_ids'].append(data['all_songs'][song])
 
 	# Add songs to the newly created playlist
 	result = sp.user_playlist_add_tracks(data['user_id'], data['playlist_id'], data['song_ids'])
-	print(result)
 	return JsonResponse(data)
-
-
-
-def page_view(request):
-	'''
-		Page for testing functions...
-		Remove later.
-	'''
-	array = getAllSongsFromArtist('touche amore')
-	print(len(array))
-	for t in array.items():
-		print(t)
-
-
-	context = {}
-	return render(request, 'play_app/page.html', context)
 

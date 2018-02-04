@@ -4,10 +4,6 @@ $(document).ready(function() {
 		top: 1
 	});
 
-	window.addEventListener('storage', function(event) {
-	   	$('#loginBtn-js').html("<i class='material-icons left'>account_box</i>Logout");
-	});
-
 	var accessToken = localStorage.getItem('accessToken');
 	var accessTokenDate = localStorage.getItem('accessTokenDate');
 	var currDate = new Date();
@@ -20,6 +16,10 @@ $(document).ready(function() {
 		//token has expired, tokens expire after one hour
 		$('#loginBtn-js').html("<i class='material-icons left'>account_box</i>Login");
 	}
+
+	window.addEventListener('storage', function(event) {
+	   	$('#loginBtn-js').html("<i class='material-icons left'>account_box</i>Logout");
+	});
 });
 
 function loginSpotify() {
