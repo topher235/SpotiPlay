@@ -14,7 +14,7 @@ import json
 
 SETLIST_FM_API_KEY = 'b0bf96c4-6af5-4ac0-ae87-1b3d8e6cd9cb'
 SPOTIFY_CLIENT_ID = 'bb7dcf3b9cf841939c48ef54843ef28a'
-SPOTIFY_CLIENT_SECRET = 'a38bc6643c2847429cde433ea6770e24'
+SPOTIFY_CLIENT_SECRET = '27f9dd07f1d44be8b12fea7d297be7f6'
 
 
 def index(request):
