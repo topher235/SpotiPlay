@@ -2,23 +2,9 @@
 {% extends 'play_app/base.html' %}
 {% load staticfiles %}
 
-{% block stylesheets %}
-	<style>
-		.parent {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-		img {
-			max-height: 500px;
-			max-width: 500px;
-		}
-	</style>
-{% endblock %}
-
-
 {% block body_block %}
-	<div class="parent">
+	<div class="row">
+		<div class="col s10 m10 l6 offset-s1 offset-m1 offset-l3">
 			<div class="card">
 				<div class="card-image">
 					<img src="{% static 'play_app/images/headphones.jpg' %}" />
@@ -29,11 +15,12 @@
 					<button class="waves-effect waves-light btn-large" onclick="returnToHome()">Return</button>
 				</div>
 			</div>
+		</div>
 	</div>
 {% endblock %}
 
 {% block scripts %}
-	<script type="text/javascript">
+	<script>
 		function returnToHome() {
 			window.location = "/play_app/";
 		}
