@@ -15,22 +15,13 @@
 </head>
 
 <body>
-
 	<nav class="teal accent-4 pin-nav">
 		<div class="nav-wrapper">
-			<a href="{% url 'play_app:index' %}" class="brand-logo">𝓢𝓹𝓸𝓽𝓲𝓟𝓵𝓪𝔂</a>
-			<a href="#" data-target="side-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-			<ul class="right hide-on-med-and-down">
+			<a href="{% url 'play_app:index' %}" class="brand-logo left">𝓢𝓹𝓸𝓽𝓲𝓟𝓵𝓪𝔂</a>
+			<ul class="right">
 				<li class="home-li-js"><a href="{% url 'play_app:index' %}"><i class="material-icons left">home</i>Home</a></li>
 				<li><a id="loginBtn-js" href="" onclick="loginSpotify()"><i class="material-icons left">account_box</i>Login</a></li>
-			</ul>
-			<!--
-			<ul class="sidenav" id="side-nav">
-				<li class="grey">Menu</li>
-				<li class="home-li-js"><a href="{% url 'play_app:index' %}"><i class="material-icons left">home</i>Home</a></li>
-				<li><a id="loginBtn-js" href="" onclick="loginSpotify()"><i class="material-icons left">account_box</i>Login</a></li>
-			</ul>
-		-->
+			</ul>		
 		</div>
 	</nav>
 

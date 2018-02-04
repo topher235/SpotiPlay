@@ -125,7 +125,7 @@ def search_result_view(request):
 		for i in range(0, 20):
 			artist_list.append(objects.Artist(context['query']['artist'][0], i))
 	except KeyError:
-		context['error_message'] = "Cannot find " + context['artist']
+		context['error_message'] = "'" + context['artist'] + "' cannot be found."
 		return render(request, 'play_app/searchError.html', context)
 
 	context['setlists'] = getSetlists(headers, context)
@@ -135,7 +135,7 @@ def search_result_view(request):
 		try:
 			artist.setlist = objects.Setlist(context['setlists']['setlist'][i])
 		except KeyError:
-			context['error_message'] = "This artist does not have a setlist."
+			context['error_message'] = "'" + context['artist'] + "' does not have any setlists."
 			return render(request, 'play_app/searchError.html', context)
 		i += 1
 	context['artist_list'] = artist_list

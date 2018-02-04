@@ -15,7 +15,11 @@
 			<!-- FORM CARD -->
 			<div class="col s12 m12 l6">
 				<div class="card">
+					<div class="card-image">
+						<img src="{% static 'play_app/images/collage.jpg' %}">
+					</div>
 					<div class="card-content">
+						<span class="card-title">Search for an artist:</span>
 						<form id="searchForm-js" onsubmit="return validateSearch();" action="{% url 'play_app:search_result' %}" method="POST">
 							{% csrf_token %}
 							{{ form.artist }}
@@ -32,7 +36,14 @@
 						<div class="card">
 							<div class="card-content">
 								<span class="card-title">About</span> <hr>
-								<p>This is the about card.</p>
+								<p>SpotiPlay is a personal project of mine. I have a passion for music and web development so putting them together seemed obvious! I go to concerts all the time and make playlists so that I go in prepared. With this application, you can save yourself hours of adding individual songs to a playlist for that upcoming concert, or you can relive a recent show by making a playlist out of that! To use:</p>
+								<ol>
+									<li>Log into your Spotify account with the Login button in the menu bar.</li>
+									<li>Search for an artist.</li>
+									<li>Choose a setlist.</li>
+									<li>Name your playlist and choose whether it should be public or private</li>
+									<li>Open up Spotify and enjoy!</li>
+								</ol>
 							</div>
 						</div>
 					</div>
@@ -44,7 +55,7 @@
 						<div class="card">
 							<div class="card-content">
 								<span class="card-title">Feedback</span> <hr>
-								<p>This is the feedback card.</p>
+								<p>Have feedback? I'd love to hear it! Whether there's a feature you think should be implemented, a bug, or just a compliment, it is all welcome. Send any feedback to: <span class="grey-text">churt.dev@gmail.com</span></p>
 							</div>
 						</div>
 					</div>
@@ -60,6 +71,7 @@
 				<a class="grey-text" href="https://www.spotify.com" target="_blank">Spotify</a> and 
 				<a class="grey-text" href="https://www.setlist.fm" target="_blank">Setlist.fm</a>
 			</p>
+			<p class="white-text">Enjoying SpotiPlay? Developers like myself are powered by <a class="grey-text" href="https://www.paypal.me/CHurt257" target="_blank">coffee</a></p>
         </div>
 	{% endblock %}
 
