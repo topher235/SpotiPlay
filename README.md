@@ -2,6 +2,8 @@
 
 SpotiPlay is a web application for users with an interest in music. A user can visit the website and search for their favorite artist. The search will yield results containing recent setlists from their favorite band. The user can then select a setlist and save it to their Spotify account as a playlist.
 
+https://spotiplay-235.herokuapp.com
+
 This application is powered by https://www.setlist.fm/ and Spotify. The back-end is being developed with Python and the Django framework. The front-end is being developed with the help of the Materialize framework and JQuery. Currently, I am not using a wrapper to access the API for Setlist.FM, but I am using Spotipy (https://github.com/plamere/spotipy) and a JS wrapper (https://github.com/JMPerez/spotify-web-api-js) to access the Spotify API. I may drop Spotipy altogether and move all API calls to the front-end for consistency.
 
 Things learned:
